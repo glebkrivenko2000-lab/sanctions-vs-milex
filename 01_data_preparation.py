@@ -245,29 +245,55 @@ def process_mid_data(filepath, converter):
     
     print("MID data processed.")
     return df_mid
+    
+def build_base_panel(sipri, polity, mid):
+    """
+    Constructs the base country-year panel for the second stage of 2SLS,
+    incorporating GDP, Polity scores, and the conflict (War) dummy.
+    """
+    print("Building base country-year panel...")
+    
+    # Extract war involvement for both sides of the conflict
+    war_a = mid.loc[mid['war'] == 1, ['iso3_a', 'year']].rename(columns={'iso3_a': 'iso3'})
+    war_b = mid.loc[mid['war'] == 1, ['iso3_b', 'year']].rename(columns={'iso3_b': 'iso3'})
+    war_df = pd.concat([war_a, war_b]).drop_duplicates()
+    war_df['war'] = 1
 
+    # Merge into a single panel
+    df = pd.merge(sipri, polity, on=['iso3', 'year'], how='left')
+    df = pd.merge(df, war_df, on=['iso3', 'year'], how='left')
+
+    df['war'] = df['war'].fillna(0)
+    df['polity_sq'] = df['polity'] ** 2
+    
+    # Sort for future lag creations
+    df = df.sort_values(by=['iso3', 'year'])
+    
+    print("Base panel created successfully.")
+    return df
 
 if __name__ == "__main__":
     import os
-    
-    # Ensure the output directory exists
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     
-    # Load mapping dictionary
     code_converter = load_code_converter(CONVERTER_FILE)
 
-    # Execute parsing
     sipri_df = process_sipri_data(SIPRI_FILE)
     polity_df = process_polity_data(POLITY_FILE, code_converter)
     trade_df = process_cow_trade_data(COW_TRADE_FILE, code_converter)
     gsdb_df = process_gsdb_data(GSDB_FILE)
     mid_df = process_mid_data(MID_FILE, code_converter)
+    
+    # Generate the base OLS panel
+    base_panel_df = build_base_panel(sipri_df, polity_df, mid_df)
 
     # Save cleaned datasets
     sipri_df.to_csv(os.path.join(OUTPUT_DIR, 'cleaned_sipri_country_year.csv'), index=False)
-    polity_df.to_csv(os.path.join(OUTPUT_DIR, 'cleaned_polity_country_year.csv'), index=False)
     trade_df.to_csv(os.path.join(OUTPUT_DIR, 'cleaned_trade_dyadic.csv'), index=False)
     gsdb_df.to_csv(os.path.join(OUTPUT_DIR, 'cleaned_gsdb_dyadic.csv'), index=False)
-    mid_df.to_csv(os.path.join(OUTPUT_DIR, 'cleaned_mid_dyadic.csv'), index=False)
+    unga_dist_df.to_csv(os.path.join(OUTPUT_DIR, 'cleaned_unga_distance_dyadic.csv'), index=False) # if processed here
+    
+    # Save the base panel
+    base_panel_df.to_csv(os.path.join(OUTPUT_DIR, 'ols_prepared_data.csv'), index=False)
 
-    print("\nSUCCESS: All raw files have been processed and saved to the 'cleaned' directory.")
+    print("\nSUCCESS: All files processed and saved.")
