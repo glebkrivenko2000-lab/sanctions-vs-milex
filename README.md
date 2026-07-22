@@ -44,8 +44,8 @@ The codebase demonstrates advanced panel-data methods and causal inference techn
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YourUsername/Economic-Sanctions-Military-Spending.git
-   cd Economic-Sanctions-Military-Spending
+   git clone https://github.com/glebkrivenko2000-lab/sanctions-vs-milex.git
+   cd sanctions-vs-milex
    ```
 2. Install dependencies:
    ```bash
