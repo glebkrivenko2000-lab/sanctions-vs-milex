@@ -26,6 +26,11 @@ The codebase demonstrates advanced panel-data methods and causal inference techn
 3. **Instrumental Variables (2SLS):** The dyadic probabilities are aggregated and weighted by the exogenous PPML trade shares to construct a robust instrument for sanction intensity.
 4. **Custom TWFE Implementation:** The `03_Main_2SLS_Analysis.ipynb` notebook implements Two-Way Fixed Effects (Country and Year FEs) manually via the Frisch-Waugh-Lovell theorem by demeaning the data. This allows for flexible and computationally efficient robust standard error estimation (HC1).
 
+## 📈 Key Findings
+1. **Endogeneity Bias:** Naive OLS estimates suggest sanctions increase military spending. However, the 2SLS strategy reveals this is entirely driven by reverse causality: sanctions are imposed on states already militarizing. In peacetime, exogenous sanction shocks have no significant causal effect on defense outlays.
+2. **Targeted Bottlenecks in Wartime:** Targeted military assistance and partial export restrictions force a significant contraction in absolute defense spending, but exclusively when the target is engaged in active armed conflict.
+3. **The "Siege Economy" Effect:** Transitioning from partial restrictions to comprehensive trade embargoes triggers a "siege economy" response. Faced with a shrinking GDP, regimes tend to protect or even increase the military's share of the national budget to ensure regime survival.
+
 ## 📁 Repository Structure
 
 ```text
