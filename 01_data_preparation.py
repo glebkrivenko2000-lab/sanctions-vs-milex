@@ -291,7 +291,7 @@ if __name__ == "__main__":
     sipri_df.to_csv(os.path.join(OUTPUT_DIR, 'cleaned_sipri_country_year.csv'), index=False)
     trade_df.to_csv(os.path.join(OUTPUT_DIR, 'cleaned_trade_dyadic.csv'), index=False)
     gsdb_df.to_csv(os.path.join(OUTPUT_DIR, 'cleaned_gsdb_dyadic.csv'), index=False)
-    unga_dist_df.to_csv(os.path.join(OUTPUT_DIR, 'cleaned_unga_distance_dyadic.csv'), index=False) # if processed here
+#   unga_dist_df.to_csv(os.path.join(OUTPUT_DIR, 'cleaned_unga_distance_dyadic.csv'), index=False) # if processed here
     
     # Save the base panel
     base_panel_df.to_csv(os.path.join(OUTPUT_DIR, 'ols_prepared_data.csv'), index=False)
