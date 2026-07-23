@@ -18,6 +18,10 @@ import numpy as np
 # --- Configuration: File Paths ---
 # It is assumed that raw data files are stored in a 'data/raw/' directory.
 # Adjust the paths if your folder structure is different.
+# --- Configuration: File Paths ---
+RAW_DIR = 'data/raw/'
+SIPRI_FILE = 'data/raw/SIPRI-Milex-data-1948-2023_0.xlsx'
+POLITY_FILE = 'data/raw/polity5.xls'
 SIPRI_FILE = 'data/raw/SIPRI-Milex-data-1948-2023_0.xlsx'
 POLITY_FILE = 'data/raw/polity5.xls'
 COW_TRADE_FILE = 'data/raw/Dyadic_COW_4.0.csv'
