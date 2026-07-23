@@ -245,6 +245,24 @@ def process_mid_data(filepath, converter):
     
     print("MID data processed.")
     return df_mid
+def process_cepii_geodist(filepath):
+    """
+    Loads, cleans, and standardizes CEPII GeoDist dyadic geographical variables.
+    """
+    print("Processing CEPII GeoDist data...")
+    df_cepii = pd.read_stata(filepath)
+    columns_to_keep = {
+        'iso_o': 'iso3_i',
+        'iso_d': 'iso3_j',
+        'contig': 'contiguity',
+        'comlang_off': 'common_language',
+        'colony': 'colonial_link',
+        'dist': 'distance'
+    }
+    df_cleaned = df_cepii[list(columns_to_keep.keys())].copy()
+    df_cleaned = df_cleaned.rename(columns=columns_to_keep)
+    print("CEPII GeoDist data processed.")
+    return df_cleaned
     
 def build_base_panel(sipri, polity, mid):
     """
@@ -284,16 +302,20 @@ if __name__ == "__main__":
     gsdb_df = process_gsdb_data(GSDB_FILE)
     mid_df = process_mid_data(MID_FILE, code_converter)
     
-    # Generate the base OLS panel
+    # -> NEW: Process raw CEPII Geodist <-
+    geodist_df = process_cepii_geodist(os.path.join(RAW_DIR, 'dist_cepii.dta'))
+    
     base_panel_df = build_base_panel(sipri_df, polity_df, mid_df)
 
     # Save cleaned datasets
     sipri_df.to_csv(os.path.join(OUTPUT_DIR, 'cleaned_sipri_country_year.csv'), index=False)
     trade_df.to_csv(os.path.join(OUTPUT_DIR, 'cleaned_trade_dyadic.csv'), index=False)
     gsdb_df.to_csv(os.path.join(OUTPUT_DIR, 'cleaned_gsdb_dyadic.csv'), index=False)
-#   unga_dist_df.to_csv(os.path.join(OUTPUT_DIR, 'cleaned_unga_distance_dyadic.csv'), index=False) # if processed here
+    mid_df.to_csv(os.path.join(OUTPUT_DIR, 'cleaned_mid_dyadic.csv'), index=False)
     
-    # Save the base panel
+    # -> NEW: Save Geodist to 'cleaned' <-
+    geodist_df.to_csv(os.path.join(OUTPUT_DIR, 'cleaned_geodist_dyadic.csv'), index=False)
+    
     base_panel_df.to_csv(os.path.join(OUTPUT_DIR, 'ols_prepared_data.csv'), index=False)
 
     print("\nSUCCESS: All files processed and saved.")
